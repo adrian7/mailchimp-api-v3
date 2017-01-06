@@ -1,5 +1,5 @@
 {
-    "name": "pacely/mailchimp-apiv3",
+    "name": "jonathanwkelly/mailchimp-apiv3",
     "description": "Simple API wrapper for Mailchimp API V3",
     "type": "library",
     "keywords": [
