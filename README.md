@@ -1,4 +1,4 @@
-# Mailchimp API v3 - PHP Wrapper [![Build Status](https://travis-ci.org/pacely/mailchimp-api-v3.svg?branch=master)](https://travis-ci.org/pacely/mailchimp-api-v3)
+# PHP Wrapper for Mailchimp API v3 
 
 * [Installation](#installation)
 * [Laravel Users](#laravel-users)
@@ -23,7 +23,7 @@ Add the following to your composer.json
 ```json
 {
     "require": {
-        "pacely/mailchimp-apiv3": "dev-master"
+        "adrian7/mailchimp-apiv3": "dev-master"
     }
 }
 ```
