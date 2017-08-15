@@ -1,10 +1,10 @@
 <?php
 
-namespace Mailchimp;
+namespace MailChimp;
 
 use Illuminate\Support\Facades\Facade;
 
-class MailchimpFacade extends Facade
+class MailChimpFacade extends Facade
 {
 
     /**
@@ -12,8 +12,8 @@ class MailchimpFacade extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor()
-    {
-        return 'Mailchimp\Mailchimp';
+    protected static function getFacadeAccessor() {
+        return 'MailChimp\API';
     }
+
 }

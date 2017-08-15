@@ -1,6 +1,6 @@
 {
-    "name": "pacely/pr-mailchimp-apiv3",
-    "description": "Simple API wrapper for Mailchimp API V3",
+    "name": "adrian7/mailchimp-api-v3",
+    "description": "Simple API wrapper for Mailchimp API version 3",
     "type": "library",
     "keywords": [
         "mailchimp",
@@ -13,16 +13,20 @@
         {
             "name": "Chris Magnussen",
             "email": "chris@hirvi.no"
+        },
+        {
+            "name": "Adrian Șilimon-Morariu",
+            "email": "adrian.silimon@yahoo.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Mailchimp\\": "src/"
+            "MailChimp\\": "src/"
         }
     },
     "require": {
         "php": ">=5.5.0",
-        "guzzlehttp/guzzle": "~5.0|~6.0",
+        "guzzlehttp/guzzle": "~6.0",
         "illuminate/support": "~5.0"
     },
     "require-dev": {
@@ -33,5 +37,5 @@
             "dev-master": "1.0-dev"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

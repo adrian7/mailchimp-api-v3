@@ -1,12 +1,11 @@
 <?php
 
-namespace spec\Mailchimp;
+namespace spec\MailChimp;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class MailchimpSpec extends ObjectBehavior
-{
+class MailChimpSpec extends ObjectBehavior {
 
     function let()
     {

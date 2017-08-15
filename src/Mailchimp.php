@@ -1,15 +1,15 @@
 <?php
 
-namespace Mailchimp;
+namespace MailChimp;
 
-use BadMethodCallException;
 use Exception;
 use GuzzleHttp\Client;
+use BadMethodCallException;
+use InvalidArgumentException;
+use Illuminate\Support\Collection;
+use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Collection;
-use InvalidArgumentException;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * @method Collection get($resource, array $options = [])
@@ -19,8 +19,7 @@ use Psr\Http\Message\ResponseInterface;
  * @method Collection patch($resource, array $options = [])
  * @method Collection delete($resource, array $options = [])
  */
-class Mailchimp
-{
+class API {
 
     /**
      * Endpoint for Mailchimp API v3
@@ -53,8 +52,8 @@ class Mailchimp
      * @param string $apikey
      * @param array $clientOptions
      */
-    public function __construct($apikey = '', $clientOptions = [])
-    {
+    public function __construct($apikey = '', $clientOptions = []) {
+
         $this->apikey = $apikey;
         $this->client = new Client($clientOptions);
 
@@ -63,6 +62,7 @@ class Mailchimp
         $this->options['headers'] = [
             'Authorization' => 'apikey ' . $this->apikey
         ];
+
     }
 
     /**
@@ -72,13 +72,14 @@ class Mailchimp
      * @return string
      * @throws Exception
      */
-    public function request($resource, $arguments = [], $method = 'GET')
-    {
+    public function request($resource, $arguments = [], $method = 'GET') {
+
         if ( ! $this->apikey) {
             throw new Exception('Please provide an API key.');
         }
 
         return $this->makeRequest($resource, $arguments, strtolower($method));
+
     }
 
     /**
@@ -98,13 +99,15 @@ class Mailchimp
         $username = null,
         $password = null
     ) {
-        $scheme = ($ssl ? 'https://' : 'http://');
+
+        $scheme = ( $ssl ? 'https://' : 'http://' );
 
         if ( ! is_null($username)) {
             return $this->options['proxy'] = sprintf('%s%s:%s@%s:%s', $scheme, $username, $password, $host, $port);
         }
 
         return $this->options['proxy'] = sprintf('%s%s:%s', $scheme, $host, $port);
+
     }
 
     /**
@@ -145,17 +148,19 @@ class Mailchimp
      * @return string
      * @throws Exception
      */
-    private function makeRequest($resource, $arguments, $method)
-    {
+    private function makeRequest($resource, $arguments, $method) {
+
         try {
-            $options = $this->getOptions($method, $arguments);
+
+            $options  = $this->getOptions($method, $arguments);
             $response = $this->client->{$method}($this->endpoint . $resource, $options);
 
             $collection = new Collection(
-                json_decode($response->getBody())
+                //TODO why we need to return a collection here? a plain object wouldn't do?
+                json_decode( $response->getBody() )
             );
 
-            if ($collection->count() == 1) {
+            if ( $collection->count() == 1 ) {
                 return $collection->collapse();
             }
 
@@ -201,8 +206,8 @@ class Mailchimp
      * @return Collection
      * @throws Exception
      */
-    public function __call($method, $arguments)
-    {
+    public function __call($method, $arguments) {
+
         if (count($arguments) < 1) {
             throw new InvalidArgumentException('Magic request methods require a URI and optional options array');
         }
@@ -215,5 +220,7 @@ class Mailchimp
         $options = isset($arguments[1]) ? $arguments[1] : [];
 
         return $this->request($resource, $options, $method);
+
     }
+
 }
