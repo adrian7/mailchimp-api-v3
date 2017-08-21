@@ -29,4 +29,5 @@ class MailChimpSpec extends ObjectBehavior {
             'count'  => 10
         ])->shouldReturnAnInstanceOf('Illuminate\Support\Collection');
     }
+
 }

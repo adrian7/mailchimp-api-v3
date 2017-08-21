@@ -19,7 +19,7 @@ use GuzzleHttp\Exception\RequestException;
  * @method Collection patch($resource, array $options = [])
  * @method Collection delete($resource, array $options = [])
  */
-class API {
+class MailChimpAPI {
 
     /**
      * Endpoint for Mailchimp API v3
@@ -69,14 +69,13 @@ class API {
      * @param string $resource
      * @param array $arguments
      * @param string $method
-     * @return string
+     * @return mixed
      * @throws Exception
      */
     public function request($resource, $arguments = [], $method = 'GET') {
 
-        if ( ! $this->apikey) {
-            throw new Exception('Please provide an API key.');
-        }
+        if ( ! $this->apikey )
+            throw new APIException('Please provide an API key.');
 
         return $this->makeRequest($resource, $arguments, strtolower($method));
 
@@ -145,7 +144,7 @@ class API {
      * @param string $resource
      * @param array $arguments
      * @param string $method
-     * @return string
+     * @return object|array
      * @throws Exception
      */
     private function makeRequest($resource, $arguments, $method) {
@@ -155,26 +154,25 @@ class API {
             $options  = $this->getOptions($method, $arguments);
             $response = $this->client->{$method}($this->endpoint . $resource, $options);
 
-            $collection = new Collection(
-                //TODO why we need to return a collection here? a plain object wouldn't do?
-                json_decode( $response->getBody() )
-            );
+            //plain old json_decode
+            $data = json_decode( $response->getBody() );
 
-            if ( $collection->count() == 1 ) {
-                return $collection->collapse();
-            }
+            var_dump($data); //TODO...
 
-            return $collection;
         } catch (ClientException $e) {
-            throw new Exception($e->getResponse()->getBody());
+            //TODO json decode exception body
+            throw new APIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
+
         } catch (RequestException $e) {
+
             $response = $e->getResponse();
 
             if ($response instanceof ResponseInterface) {
-                throw new Exception($e->getResponse()->getBody());
+                throw new APIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
             }
 
-            throw new Exception($e->getMessage());
+            throw new APIException($e->getMessage());
+
         }
     }
 
@@ -183,8 +181,8 @@ class API {
      * @param array $arguments
      * @return array
      */
-    private function getOptions($method, $arguments)
-    {
+    private function getOptions($method, $arguments) {
+
         unset($this->options['json'], $this->options['query']);
 
         if (count($arguments) < 1) {
@@ -203,7 +201,7 @@ class API {
     /**
      * @param string $method
      * @param array $arguments
-     * @return Collection
+     * @return object|array
      * @throws Exception
      */
     public function __call($method, $arguments) {
