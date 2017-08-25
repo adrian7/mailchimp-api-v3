@@ -1,6 +1,6 @@
 formatter.name: pretty
 suites:
     main:
-        namespace: Mailchimp
-        psr4_prefix: Mailchimp
+        namespace: MailChimp
+        psr4_prefix: MailChimp
         src_path: src

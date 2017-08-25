@@ -6,18 +6,13 @@ use Exception;
 use GuzzleHttp\Client;
 use BadMethodCallException;
 use InvalidArgumentException;
-use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 
 /**
- * @method Collection get($resource, array $options = [])
- * @method Collection head($resource, array $options = [])
- * @method Collection put($resource, array $options = [])
- * @method Collection post($resource, array $options = [])
- * @method Collection patch($resource, array $options = [])
- * @method Collection delete($resource, array $options = [])
+ * Class MailChimpAPI
+ * @package MailChimp
  */
 class MailChimpAPI {
 
@@ -157,21 +152,23 @@ class MailChimpAPI {
             //plain old json_decode
             $data = json_decode( $response->getBody() );
 
-            var_dump($data); //TODO...
+            if( $de = json_last_error() )
+                throw new MailChimpAPIException("Could not decode API response... .");
+
+            return $data;
 
         } catch (ClientException $e) {
-            //TODO json decode exception body
-            throw new APIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
+            throw new MailChimpAPIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
 
         } catch (RequestException $e) {
 
             $response = $e->getResponse();
 
             if ($response instanceof ResponseInterface) {
-                throw new APIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
+                throw new MailChimpAPIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
             }
 
-            throw new APIException($e->getMessage());
+            throw new MailChimpAPIException($e->getMessage());
 
         }
     }
