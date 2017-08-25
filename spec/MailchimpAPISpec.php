@@ -27,4 +27,10 @@ class MailChimpAPISpec extends ObjectBehavior {
         ])->shouldReturnAnInstanceOf('stdClass');
     }
 
+    function it_should_throw_api_exception() {
+
+        $this->shouldThrow('MailChimp\MailChimpAPIException')
+             ->during('get', ['/lists/undefined']);
+    }
+
 }

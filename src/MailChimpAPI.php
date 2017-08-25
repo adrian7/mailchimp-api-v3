@@ -70,7 +70,7 @@ class MailChimpAPI {
     public function request($resource, $arguments = [], $method = 'GET') {
 
         if ( ! $this->apikey )
-            throw new APIException('Please provide an API key.');
+            throw new MailChimpAPIException('Please provide an API key.');
 
         return $this->makeRequest($resource, $arguments, strtolower($method));
 
@@ -171,6 +171,7 @@ class MailChimpAPI {
             throw new MailChimpAPIException($e->getMessage());
 
         }
+
     }
 
     /**
