@@ -34,6 +34,18 @@ class MailChimpAPIException extends \Exception {
     protected $detail = 'no details';
 
     /**
+     * Field-specific errors
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
+     * Field-specific error messages as string
+     * @var string|null
+     */
+    protected $fieldErrorsMsg = NULL;
+
+    /**
      * MailChimpAPIException constructor.
      *
      * @param string $message
@@ -87,7 +99,22 @@ class MailChimpAPIException extends \Exception {
             if( isset($data->detail) )
                 $this->detail = $data->detail;
 
-            return ( "#{$this->status} {$this->title} \n {$this->detail}" );
+            if( isset($data->errors) ){
+
+                $this->errors = $data->errors;
+
+                if( is_array($data->errors) )
+                    $this->fieldErrorsMsg = implode("\n", array_map(function ($val){
+                        return "\n  - Field: {$val->field}\n    Error: {$val->message}";
+                    }, $data->errors));
+
+            }
+
+            $message = ( "#{$this->status} {$this->title} \n {$this->detail}" );
+
+            if(  $this->fieldErrorsMsg )
+                $message.= ( "\n Field errors: " . $this->fieldErrorsMsg );
+
         }
 
         return $message;
