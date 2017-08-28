@@ -7,21 +7,15 @@
     * [Partial Response](#partial-response)
     * [Behind Proxy](#behind-proxy)
 * [Examples](#examples)
-    * [Collection object](#collection-object)
     * [Create lists](#create-lists)
     * [Subresources](#subresources)
     * [Proxy](#proxy)
 * [Further documentation](#further-documentation)
 
 # Installation
-Add the following to your composer.json
 
-```json
-{
-    "require": {
-        "adrian7/mailchimp-api-v3": "dev-master"
-    }
-}
+```
+composer require adrian7/mailchimp-api-v3
 ```
 
 # Usage
