@@ -160,9 +160,9 @@ class MailChimpAPI {
             );
 
             //plain old json_decode
-            $data = json_decode( $response->getBody() );
+            $data = ( 204 == $response->getStatusCode() ) ? TRUE : json_decode( $response->getBody() );
 
-            if( $de = json_last_error() )
+            if( empty($data) and ( $de = json_last_error() ) )
                 throw new MailChimpAPIException(
                     "Could not decode API response... . 
                     JSON error #{$de}: " . json_last_error_msg()
