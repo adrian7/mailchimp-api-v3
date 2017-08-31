@@ -13,6 +13,13 @@ use GuzzleHttp\Exception\RequestException;
 /**
  * Class MailChimpAPI
  * @package MailChimp
+ *
+ * @method mixed get($resource, array $options = [])
+ * @method mixed head($resource, array $options = [])
+ * @method mixed put($resource, array $options = [])
+ * @method mixed post($resource, array $options = [])
+ * @method mixed patch($resource, array $options = [])
+ * @method mixed delete($resource, array $options = [])
  */
 class MailChimpAPI {
 
@@ -147,28 +154,42 @@ class MailChimpAPI {
         try {
 
             $options  = $this->getOptions($method, $arguments);
-            $response = $this->client->{$method}($this->endpoint . $resource, $options);
+            $response = $this->client->{$method}(
+                ( $this->endpoint . $resource ),
+                $options
+            );
 
             //plain old json_decode
             $data = json_decode( $response->getBody() );
 
             if( $de = json_last_error() )
-                throw new MailChimpAPIException("Could not decode API response... .");
+                throw new MailChimpAPIException(
+                    "Could not decode API response... . 
+                    JSON error #{$de}: " . json_last_error_msg()
+                );
 
             return $data;
 
         } catch (ClientException $e) {
-            throw new MailChimpAPIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
+            throw new MailChimpAPIException(
+                $e->getResponse()->getBody(),
+                $e->getResponse()->getStatusCode(),
+                $e
+            );
 
         } catch (RequestException $e) {
 
             $response = $e->getResponse();
 
-            if ($response instanceof ResponseInterface) {
-                throw new MailChimpAPIException($e->getResponse()->getBody(), $e->getResponse()->getStatusCode(), $e);
-            }
+            if ( $response instanceof ResponseInterface )
+                throw new MailChimpAPIException(
+                    $e->getResponse()->getBody(),
+                    $e->getResponse()->getStatusCode(),
+                    $e
+                );
 
-            throw new MailChimpAPIException($e->getMessage());
+
+            throw new MailChimpAPIException( $e->getMessage() );
 
         }
 
@@ -204,16 +225,18 @@ class MailChimpAPI {
      */
     public function __call($method, $arguments) {
 
-        if (count($arguments) < 1) {
-            throw new InvalidArgumentException('Magic request methods require a URI and optional options array');
-        }
+        if ( count($arguments) < 1 )
+            throw new InvalidArgumentException(
+                'Magic request methods require a URI and optional options array'
+            );
 
-        if ( ! in_array($method, $this->allowedMethods)) {
-            throw new BadMethodCallException('Method "' . $method . '" is not supported.');
-        }
+        if ( ! in_array($method, $this->allowedMethods) )
+            throw new BadMethodCallException(
+                'Method "' . $method . '" is not supported.'
+            );
 
         $resource = $arguments[0];
-        $options = isset($arguments[1]) ? $arguments[1] : [];
+        $options  = isset($arguments[1]) ? $arguments[1] : [];
 
         return $this->request($resource, $options, $method);
 
