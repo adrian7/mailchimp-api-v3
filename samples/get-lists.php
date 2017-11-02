@@ -1,13 +1,13 @@
 <?php
 /**
- * mailchimp-api-v3 - get lists sample
- * @author adrian7 (adrian@studentmoneysaver.co.uk)
+ * MailChimp API v3 Client - get lists sample
+ * @author adrian7
  * @version 1.0
  */
 
 require_once ('../vendor/autoload.php');
 
-define('MC_API_KEY', 'ea400f0d078e0ddddf638e95e69f9b0f-us10');
+define('MC_API_KEY', 'YOUR_MC_API_KEY_HERE');
 
 $mc     = new \MailChimp\MailChimpAPI(MC_API_KEY);
 $result = $mc->get('lists', [

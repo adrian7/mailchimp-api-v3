@@ -1,7 +1,7 @@
 <?php
 /**
- * mailchimp-api-v3 - [file description]
- * @author adrian7 (adrian@studentmoneysaver.co.uk)
+ * MailChimp API v3 Client - MailChimp API Exception class
+ * @author adrian7
  * @version 1.0
  */
 
